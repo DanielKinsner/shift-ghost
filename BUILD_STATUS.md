@@ -5,7 +5,7 @@ Running checklist for the Shift Ghost demo. `[x]` = built and verified in the ru
 ## Milestones
 
 - [x] M0 · Scaffold (Next.js 16.4, Tailwind v4, Remotion 4, Vitest, Playwright), docs, public repo
-- [ ] M1 · Domain model, seed data, extraction engine, rules, patterns + unit tests
+- [x] M1 · Domain model, seed data, extraction engine, rules, patterns + unit tests
 - [ ] M2 · App shell, design system, demo entry, demo controls drawer
 - [ ] M3 · First-run setup wizard
 - [ ] M4 · Mobile closing capture + transcript review / extraction confirmation

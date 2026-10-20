@@ -6,7 +6,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "remotion:studio": "remotion studio remotion/index.ts",
+    "remotion:render": "remotion render remotion/index.ts ShiftGhostExplainer out/shift-ghost-explainer.mp4",
+    "remotion:render:vertical": "remotion render remotion/index.ts ShiftGhostExplainerVertical out/shift-ghost-explainer-vertical.mp4",
+    "remotion:still": "remotion still remotion/index.ts ShiftGhostExplainer out/explainer-still.png --frame=150"
   },
   "dependencies": {
     "@remotion/google-fonts": "4.0.537",
