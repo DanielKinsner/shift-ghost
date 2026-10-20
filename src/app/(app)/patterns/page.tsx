@@ -1,3 +1,8 @@
-export default function Page() {
-  return <h1 className="font-display text-4xl font-semibold">patterns</h1>;
+import type { Metadata } from "next";
+import { Patterns } from "@/components/patterns/Patterns";
+
+export const metadata: Metadata = { title: "Patterns" };
+
+export default function PatternsPage() {
+  return <Patterns />;
 }

@@ -9,11 +9,11 @@ Running checklist for the Shift Ghost demo. `[x]` = built and verified in the ru
 - [x] M2 · App shell, design system, demo entry, demo controls drawer
 - [x] M3 · First-run setup wizard
 - [x] M4 · Mobile closing capture + transcript review / extraction confirmation
-- [ ] M5 · Opening briefing, actions (ack / claim / resolve / escalate / ask), undo, conflicts
-- [ ] M6 · Issue detail + evidence timeline, recurring patterns
-- [ ] M7 · Rule builder with test panel
-- [ ] M8 · Locations & shift templates, team & notifications, settings/retention/integrations, audit trail
-- [ ] M9 · Remotion explainer (16:9 + 9:16) + in-app preview
+- [x] M5 · Opening briefing, actions (ack / claim / resolve / escalate / ask), undo, conflicts
+- [x] M6 · Issue detail + evidence timeline, recurring patterns
+- [x] M7 · Rule builder with test panel
+- [x] M8 · Locations & shift templates, team & notifications, settings/retention/integrations, audit trail
+- [x] M9 · Remotion explainer (16:9 + 9:16) + in-app preview
 - [ ] M10 · E2E test, responsive + accessibility QA, README, SALES_HANDOFF
 
 ## Acceptance story (must complete in under four minutes)

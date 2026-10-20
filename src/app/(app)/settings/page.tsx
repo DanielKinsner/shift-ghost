@@ -1,3 +1,8 @@
-export default function Page() {
-  return <h1 className="font-display text-4xl font-semibold">settings</h1>;
+import type { Metadata } from "next";
+import { Settings } from "@/components/ops/Settings";
+
+export const metadata: Metadata = { title: "Settings" };
+
+export default function SettingsPage() {
+  return <Settings />;
 }

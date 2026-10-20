@@ -68,7 +68,11 @@ export function ItemCard({
         <h3 className={cx("mt-2 font-display text-[1.3rem] font-semibold leading-snug tracking-wide text-paper-50", dismissed && "line-through")}>{item.title}</h3>
         {item.facts.length > 0 && <p className="mt-1 text-sm text-steel-300">{item.facts.join(" · ")}</p>}
 
-        {item.confidence !== "high" && <p className="mt-2 text-sm text-amber/95">{item.confidenceReason}</p>}
+        {item.confidence !== "high" && (
+          <p className={cx("mt-2 text-sm", needs ? "text-amber/95" : "text-steel-400")}>
+            {needs ? item.confidenceReason : `Checked by a person. Flagged because: ${item.confidenceReason.charAt(0).toLowerCase()}${item.confidenceReason.slice(1)}`}
+          </p>
+        )}
 
         <ul className="mt-3 flex flex-col gap-1.5">
           {item.evidenceIds.map((eid) => {

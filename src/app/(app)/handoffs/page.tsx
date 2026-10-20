@@ -1,3 +1,8 @@
-export default function Page() {
-  return <h1 className="font-display text-4xl font-semibold">handoffs</h1>;
+import type { Metadata } from "next";
+import { Handoffs } from "@/components/ops/Handoffs";
+
+export const metadata: Metadata = { title: "Handoffs" };
+
+export default function HandoffsPage() {
+  return <Handoffs />;
 }

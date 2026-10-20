@@ -1,3 +1,8 @@
-export default function Page() {
-  return <h1 className="font-display text-4xl font-semibold">rules</h1>;
+import type { Metadata } from "next";
+import { RuleBuilder } from "@/components/rules/RuleBuilder";
+
+export const metadata: Metadata = { title: "Rules" };
+
+export default function RulesPage() {
+  return <RuleBuilder />;
 }

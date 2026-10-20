@@ -942,6 +942,48 @@ export const markFalseAlarm: Command<{ itemId: ID; note: string; undo?: boolean 
   return { touched: [{ table: "items", id: item.id }], message: input.undo ? "Counted again" : "Marked as false alarm" };
 };
 
+export const createTask: Command<{ locationId: ID; title: string; detail: string; kind: Task["kind"]; ownerId: ID | null; dueAt: ISO | null; dueLabel: string | null; issueId: ID | null }> = (db, input, ctx) => {
+  const existing = input.issueId ? Object.values(db.tasks).find((t) => t.issueId === input.issueId && t.status !== "done" && t.title === input.title) : null;
+  if (existing) throw new CommandError("That task already exists and is still open.");
+  const id = nextId(db, "tk");
+  db.tasks[id] = {
+    id,
+    orgId: db.organization.id,
+    locationId: input.locationId,
+    issueId: input.issueId,
+    itemIds: [],
+    title: input.title,
+    detail: input.detail,
+    kind: input.kind,
+    ownerId: input.ownerId,
+    claimedById: null,
+    claimedAt: null,
+    status: "open",
+    dueAt: input.dueAt,
+    dueLabel: input.dueLabel,
+    createdAt: ctx.now,
+    createdBy: "person",
+    ruleId: null,
+    resolvedAt: null,
+    resolvedById: null,
+    resolutionNote: null,
+    version: 1,
+    updatedAt: ctx.now,
+    updatedById: ctx.actorId,
+  };
+  audit(db, ctx, { action: "task.created", entityType: "task", entityId: id, locationId: input.locationId, summary: `Created task “${input.title}”${input.ownerId ? ` for ${userName(db, input.ownerId)}` : ""}` });
+  return { touched: [{ table: "tasks", id }], message: "Task created" };
+};
+
+export const fileTicket: Command<{ connectorId: ID; issueId: ID; summary: string }> = (db, input, ctx) => {
+  const c = db.connectors[input.connectorId];
+  const issue = db.issues[input.issueId];
+  const id = nextId(db, "dl");
+  c.deliveries.unshift({ id, at: ctx.now, summary: input.summary, ok: true });
+  audit(db, ctx, { action: "connector.ticket", entityType: "issue", entityId: issue.id, locationId: issue.locationId, summary: `Sent the evidence trail for “${issue.title}” to ${c.name} (simulated)` });
+  return { touched: [{ table: "connectors", id: c.id }], message: `Ticket filed with ${c.name}` };
+};
+
 /** Demo: a teammate edits the same task from another phone. */
 export const remoteEdit: Command<{ taskId: ID; userId: ID }> = (db, { taskId, userId }, ctx) => {
   const task = db.tasks[taskId];
@@ -982,7 +1024,7 @@ export const runTimedRules: Command<Record<string, never>> = (db, _input, ctx) =
 
 // ───────────────────────────────── configuration
 
-export const saveRule: Command<{ rule: Omit<EscalationRule, "orgId" | "createdById" | "updatedAt"> & { id?: ID } }> = (db, { rule }, ctx) => {
+export const saveRule: Command<{ rule: Omit<EscalationRule, "orgId" | "createdById" | "updatedAt" | "id"> & { id?: ID } }> = (db, { rule }, ctx) => {
   const id = rule.id ?? nextId(db, "rl");
   const existed = Boolean(db.rules[id]);
   db.rules[id] = { ...rule, id, orgId: db.organization.id, createdById: db.rules[id]?.createdById ?? ctx.actorId ?? "", updatedAt: ctx.now };
