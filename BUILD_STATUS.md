@@ -60,6 +60,10 @@ Running checklist for the Shift Ghost demo. `[x]` = built and verified in the ru
 - Screenshot sweep at 390 / 768 / 1440 / 2560 px reviewed; no horizontal scroll at 390 px
 - Remotion: both compositions rendered to MP4 (45 s, 30 fps)
 
+## Deployment
+
+- [x] Live at https://shift-ghost.vercel.app (Vercel, production). All 14 Playwright tests pass against the live URL; every route, the MP4 and the sound files respond.
+
 ## Known limits (by design for a demo)
 
 - Speech-to-text is simulated unless the browser speech service is enabled; the embedded preview pane blocks the mic.

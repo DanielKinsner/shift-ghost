@@ -2,6 +2,8 @@
 
 **A voice-first shift handoff.** A tired closing manager answers five questions in about two minutes. Shift Ghost turns that into tomorrow's prioritized opening brief: every item tied to the sentence it came from, anything uncertain held for a person to confirm, and problems that keep coming back across shifts and stores surfaced with their evidence.
 
+**Live demo: https://shift-ghost.vercel.app** (press *Start the four-minute demo*; everything runs in your browser, and *Demo controls → Reset all demo data* starts over).
+
 Demo company: **Nightjar Kitchens**, a fictional three-store fast-casual group (Downtown, Northgate, Canyon Plaza). All data is seeded and runs in the browser. No accounts, no paid APIs, no external services.
 
 ![Opening brief](docs/screenshots/briefing-desktop.png)
@@ -29,6 +31,10 @@ Open http://localhost:3000 and press **Start the four-minute demo**.
 | `npm run remotion:render:vertical` | Render the 1080×1920 variant with the same props |
 
 First-time Playwright setup: `npx playwright install chromium`.
+
+### Deploy
+
+The repo is linked to the Vercel project `shift-ghost` with the GitHub integration on, so every push to `main` deploys to https://shift-ghost.vercel.app. `vercel.json` pins the framework to Next.js. To deploy by hand: `vercel deploy --prod`.
 
 ### Reset the demo
 
