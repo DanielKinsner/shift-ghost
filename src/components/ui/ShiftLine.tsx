@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import { Moon, Sunrise } from "lucide-react";
 import { GhostMark } from "./brand";
 import { cx } from "./primitives";
@@ -24,7 +24,6 @@ export function ShiftLine({
   focus?: "close" | "ghost" | "open" | "all";
   className?: string;
 }) {
-  const reduce = useReducedMotion();
   const lit = (part: "close" | "ghost" | "open") => !focus || focus === "all" || focus === part;
   return (
     <div className={cx("relative grid grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-4", className)} role="img" aria-label={`${closeLabel} at ${closeTime}, through Shift Ghost extraction, to ${openLabel} at ${openTime}`}>
@@ -36,11 +35,11 @@ export function ShiftLine({
       <Node icon={<Sunrise size={18} />} title={openLabel} time={openTime} lit={lit("open")} align="right" />
       {/* the rail */}
       <div className="pointer-events-none absolute left-[18%] right-[18%] top-1/2 -z-10 h-[3px] -translate-y-1/2 overflow-hidden rounded bg-night-600">
-        {!reduce &&
-          [0, 1, 2].map((i) => (
+        {/* Same markup on server and client; reduced motion hides the pulses in CSS. */}
+        {[0, 1, 2].map((i) => (
             <motion.span
               key={i}
-              className="absolute top-0 h-full w-10 rounded bg-gradient-to-r from-transparent via-safety to-transparent"
+              className="absolute top-0 h-full w-10 rounded bg-gradient-to-r from-transparent via-safety to-transparent motion-reduce:hidden"
               initial={{ left: "-10%" }}
               animate={{ left: "110%" }}
               transition={{ duration: 2.8, repeat: Infinity, delay: i * 0.93, ease: "linear" }}
