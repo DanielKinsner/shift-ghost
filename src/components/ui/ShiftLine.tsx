@@ -53,11 +53,11 @@ export function ShiftLine({
 
 function Node({ icon, title, time, lit, align }: { icon: React.ReactNode; title: string; time: string; lit: boolean; align: "left" | "right" }) {
   return (
-    <div className={cx("panel flex min-w-0 items-center gap-3 px-3 py-3 sm:px-4", align === "right" && "flex-row-reverse text-right", lit ? "border-steel-500/70" : "opacity-55")}>
-      <span className={cx("grid h-9 w-9 flex-none place-items-center rounded-lg", lit ? "bg-night-600 text-paper-100" : "bg-night-700 text-steel-500")}>{icon}</span>
+    <div className={cx("panel flex min-w-0 items-center gap-2 px-2.5 py-3 sm:gap-3 sm:px-4", align === "right" && "flex-row-reverse text-right", lit ? "border-steel-500/70" : "opacity-55")}>
+      <span className={cx("hidden h-9 w-9 flex-none place-items-center rounded-lg xs:grid", lit ? "bg-night-600 text-paper-100" : "bg-night-700 text-steel-500")}>{icon}</span>
       <span className="min-w-0">
-        <span className="block truncate font-display text-[0.95rem] font-semibold tracking-wide text-paper-100 sm:text-base">{title}</span>
-        <span className="block truncate font-mono text-[0.72rem] text-steel-400">{time}</span>
+        <span className="block font-display text-[0.9rem] font-semibold leading-tight tracking-wide text-paper-100 sm:text-base">{title}</span>
+        <span className="block font-mono text-[0.68rem] leading-tight text-steel-400 sm:text-[0.72rem]">{time}</span>
       </span>
     </div>
   );

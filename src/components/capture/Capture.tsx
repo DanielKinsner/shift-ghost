@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { ArrowLeft, ArrowRight, Check, Keyboard, Mic, Pause, Play, RotateCcw, Square, Volume2, WifiOff, X } from "lucide-react";
 import { useStore } from "@/store/store";
@@ -66,12 +66,8 @@ export function Capture() {
   const anyAnswer = answers.some((a) => a.text.trim());
 
   // Simulated transcription: reveal the seeded words at speaking pace while recording.
-  useEffect(() => {
-    if (!rec.recording || useBrowserSpeech) return;
-    const words = (seeded?.text ?? "").split(" ");
-    const n = Math.min(words.length, Math.floor(rec.elapsed * 3.1));
-    setLiveText(words.slice(0, n).join(" "));
-  }, [rec.elapsed, rec.recording, seeded, useBrowserSpeech]);
+  const seededWords = (seeded?.text ?? "").split(" ");
+  const heardSoFar = useBrowserSpeech ? liveText : seededWords.slice(0, Math.min(seededWords.length, Math.floor(rec.elapsed * 3.1))).join(" ");
 
   if (!can(user, "capture")) return <PermissionDenied permission="capture" what="Closeout capture" role={ROLE_TITLE[user.role]} />;
 
@@ -173,7 +169,7 @@ export function Capture() {
       </header>
 
       {phase === "question" && (
-        <div className="px-4 sm:px-6" aria-label={`Question ${index + 1} of ${questions.length}`}>
+        <div className="px-4 sm:px-6" role="progressbar" aria-label="Closeout progress" aria-valuemin={1} aria-valuemax={questions.length} aria-valuenow={index + 1} aria-valuetext={`Question ${index + 1} of ${questions.length}`}>
           <div className="mx-auto flex max-w-md gap-1.5">
             {questions.map((_, i) => (
               <span key={i} className={cx("h-1.5 flex-1 rounded-full", i < index || answers[i].text ? (i === index ? "bg-safety" : "bg-steel-300") : i === index ? "bg-safety" : "bg-night-600")} />
@@ -271,7 +267,7 @@ export function Capture() {
                   <div className="mt-4 min-h-[5.5rem]" aria-live="polite">
                     {rec.recording ? (
                       <p className="text-[1.05rem] leading-relaxed text-steel-100">
-                        {liveText}
+                        {heardSoFar}
                         <span className="ml-0.5 inline-block h-5 w-0.5 translate-y-1 animate-pulse bg-safety" aria-hidden />
                       </p>
                     ) : answers[index].text ? (

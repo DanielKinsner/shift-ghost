@@ -63,12 +63,14 @@ function DrawerBody({ section, onClose }: { section: Section; onClose: () => voi
   const now = useNow();
   const [confirmReset, setConfirmReset] = useState(false);
   const [sample, setSample] = useState(SAMPLE_TRANSCRIPTS[0].id);
-  const refs = { guide: useRef<HTMLElement>(null), users: useRef<HTMLElement>(null), clock: useRef<HTMLElement>(null), sim: useRef<HTMLElement>(null) };
+  const usersRef = useRef<HTMLElement>(null);
+  const clockRef = useRef<HTMLElement>(null);
+  const simRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    const el = refs[section].current;
-    if (el && section !== "guide") el.scrollIntoView({ block: "start" });
-  }, [section]); // eslint-disable-line react-hooks/exhaustive-deps
+    const el = section === "users" ? usersRef.current : section === "clock" ? clockRef.current : section === "sim" ? simRef.current : null;
+    el?.scrollIntoView({ block: "start" });
+  }, [section]);
 
   const guide = guideProgress(db, now);
   const nextStep = guide.find((g) => !g.done);
@@ -103,7 +105,7 @@ function DrawerBody({ section, onClose }: { section: Section; onClose: () => voi
 
   return (
     <div className="flex flex-col gap-7 pb-6">
-      <section ref={refs.guide} aria-labelledby="dg-guide">
+      <section aria-labelledby="dg-guide">
         <h3 id="dg-guide" className="mb-3 font-display text-sm font-semibold uppercase tracking-widest text-steel-400">
           Four-minute story
         </h3>
@@ -129,7 +131,7 @@ function DrawerBody({ section, onClose }: { section: Section; onClose: () => voi
         )}
       </section>
 
-      <section ref={refs.users} aria-labelledby="dg-users">
+      <section ref={usersRef} aria-labelledby="dg-users">
         <h3 id="dg-users" className="mb-3 flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-widest text-steel-400">
           <UsersIcon size={14} /> View as
         </h3>
@@ -159,7 +161,7 @@ function DrawerBody({ section, onClose }: { section: Section; onClose: () => voi
         </div>
       </section>
 
-      <section ref={refs.clock} aria-labelledby="dg-clock">
+      <section ref={clockRef} aria-labelledby="dg-clock">
         <h3 id="dg-clock" className="mb-3 flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-widest text-steel-400">
           <Clock size={14} /> Demo clock
         </h3>
@@ -176,7 +178,7 @@ function DrawerBody({ section, onClose }: { section: Section; onClose: () => voi
         </div>
       </section>
 
-      <section ref={refs.sim} aria-labelledby="dg-sim" className="flex flex-col gap-4">
+      <section ref={simRef} aria-labelledby="dg-sim" className="flex flex-col gap-4">
         <h3 id="dg-sim" className="flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-widest text-steel-400">
           <FlaskConical size={14} /> Simulate
         </h3>

@@ -6,7 +6,7 @@ import type { Confidence, Severity, User } from "@/domain/types";
 
 export const cx = clsx;
 
-type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "paper";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "danger" | "paper" | "paperOutline";
 type ButtonSize = "sm" | "md" | "lg";
 
 const VARIANT: Record<ButtonVariant, string> = {
@@ -17,6 +17,7 @@ const VARIANT: Record<ButtonVariant, string> = {
   ghost: "text-steel-300 hover:text-paper-100 hover:bg-night-700",
   danger: "bg-signal text-night-950 hover:bg-[#ff6257] font-semibold",
   paper: "bg-ink text-paper-100 hover:bg-[#2b2a25] font-semibold",
+  paperOutline: "border border-ink/30 text-ink hover:bg-ink/10 hover:border-ink/50",
 };
 const SIZE: Record<ButtonSize, string> = {
   sm: "h-8 px-3 text-sm gap-1.5 rounded-md",

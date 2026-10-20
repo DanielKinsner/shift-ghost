@@ -1,7 +1,7 @@
 "use client";
 
 import { cx, type LampTone, StatusLight } from "./primitives";
-import { fmtClock, toMs } from "@/domain/time";
+import { fmtClock, fmtShortWeekday, toMs } from "@/domain/time";
 
 export interface RailMarker {
   id: string;
@@ -46,8 +46,12 @@ export function TimeRail({
   const s = toMs(start);
   const e = toMs(end);
   const pct = (iso: string) => Math.min(100, Math.max(0, ((toMs(iso) - s) / (e - s)) * 100));
-  const hours = Math.round((e - s) / 3_600_000);
-  const ticks = Array.from({ length: hours + 1 }, (_, i) => new Date(s + i * 3_600_000).toISOString());
+  const totalHours = Math.round((e - s) / 3_600_000);
+  // Hourly ticks for a shift, daily ticks for a multi-day thread.
+  const stepH = totalHours > 48 ? 24 : 1;
+  const hours = Math.round(totalHours / stepH);
+  const ticks = Array.from({ length: hours + 1 }, (_, i) => new Date(s + i * stepH * 3_600_000).toISOString());
+  const tickLabel = (iso: string) => (stepH === 24 ? `${fmtShortWeekday(iso)} ${Number(iso.slice(8, 10))}` : fmtClock(iso));
   const nowPct = now ? pct(now) : null;
 
   // Stack markers that land close together.
@@ -56,20 +60,20 @@ export function TimeRail({
   const placed = sorted.map((m) => {
     const p = pct(m.at);
     let lane = 0;
-    while (lanes[lane] !== undefined && p - lanes[lane] < (dense ? 9 : 14)) lane++;
+    while (lanes[lane] !== undefined && p - lanes[lane] < (dense ? 11 : 14)) lane++;
     lanes[lane] = p;
     return { ...m, p, lane };
   });
   const laneCount = Math.max(1, ...placed.map((m) => m.lane + 1));
 
   return (
-    <div className={cx("relative select-none", className)} role="img" aria-label={`${label}: ${markers.map((m) => `${m.label} at ${fmtClock(m.at)}`).join("; ")}`}>
+    <div className={cx("relative select-none overflow-hidden", className)} role="img" aria-label={`${label}: ${markers.map((m) => `${m.label} at ${fmtClock(m.at)}`).join("; ")}`}>
       <div className="relative" style={{ height: 34 + laneCount * 26 }}>
         {/* bands */}
         {bands.map((b) => (
           <div key={b.id} className="absolute top-0 bottom-0" style={{ left: `${pct(b.at)}%` }}>
             <div className={cx("absolute top-0 bottom-5 w-px", b.strong ? "bg-safety" : "bg-steel-500/60")} />
-            <span className={cx("absolute -top-0.5 left-1.5 whitespace-nowrap font-display text-[0.7rem] font-semibold uppercase tracking-wider", b.strong ? "text-safety" : "text-steel-400")}>
+            <span className={cx("absolute -top-0.5 whitespace-nowrap font-display text-[0.7rem] font-semibold uppercase tracking-wider", pct(b.at) > 72 ? "right-1.5" : "left-1.5", b.strong ? "text-safety" : "text-steel-400", dense && !b.strong && "hidden sm:inline")}>
               {b.label}
             </span>
           </div>
@@ -83,7 +87,7 @@ export function TimeRail({
               ) : (
                 <StatusLight tone={m.tone} off={m.done} size={11} />
               )}
-              <span className={cx("max-w-[11rem] truncate text-xs", m.done ? "text-steel-500 line-through" : "text-steel-100")}>{m.label}</span>
+              <span className={cx("max-w-[11rem] truncate text-xs", dense && "hidden sm:inline", m.done ? "text-steel-500 line-through" : "text-steel-100")}>{m.label}</span>
             </div>
           </div>
         ))}
@@ -100,10 +104,10 @@ export function TimeRail({
         {ticks.map((t, i) => (
           <span
             key={t}
-            className={cx("absolute -translate-x-1/2 font-mono text-[0.68rem] text-steel-500", dense && i % 2 === 1 && "hidden sm:inline")}
+            className={cx("absolute font-mono text-[0.68rem] text-steel-500", i === 0 ? "translate-x-0" : i === ticks.length - 1 ? "-translate-x-full" : "-translate-x-1/2", dense && i % 2 === 1 && "hidden sm:inline")}
             style={{ left: `${(i / hours) * 100}%` }}
           >
-            {fmtClock(t)}
+            {tickLabel(t)}
           </span>
         ))}
       </div>

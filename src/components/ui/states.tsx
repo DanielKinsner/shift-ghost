@@ -26,9 +26,11 @@ export function PermissionDenied({ permission, what, role }: { permission: Permi
           <span className="inline-flex items-center gap-2 font-display text-sm font-semibold uppercase tracking-widest text-safety">
             <Lock size={15} /> Restricted area
           </span>
-          <h1 className="font-display text-3xl font-semibold tracking-wide">{what} is managed by {whoCanGrant(permission)}</h1>
+          <h1 className="font-display text-3xl font-semibold tracking-wide">
+            Only {whoCanGrant(permission)} can open {what.charAt(0).toLowerCase() + what.slice(1)}
+          </h1>
           <p className="text-steel-300">
-            You're signed in as a {role.toLowerCase()}. You can still see your opening brief and act on your tasks. Ask {whoCanGrant(permission)} if you need access here.
+            You&apos;re signed in as a {role.toLowerCase()}. You can still see your opening brief and act on your tasks. Ask {whoCanGrant(permission)} if you need access here.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
             <Link href="/briefing">

@@ -222,6 +222,7 @@ function PatternCard({ pattern: p, now }: { pattern: Pattern; now: string }) {
                 </Button>
               )}
               {issueId &&
+                p.topic !== "stock" &&
                 (maint.status === "connected" ? (
                   <Button size="sm" icon={<Ticket size={14} />} onClick={() => dispatch(fileTicket, { connectorId: maint.id, issueId, summary: `${p.headline} (${p.count} quotes attached)` })}>
                     Send to {maint.name.toLowerCase()}

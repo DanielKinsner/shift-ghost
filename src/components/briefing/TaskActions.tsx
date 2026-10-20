@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DropdownMenu } from "radix-ui";
 import { Check, Ellipsis, Eye, Hand, MessageCircleQuestion, RotateCcw, Siren } from "lucide-react";
 import { useStore } from "@/store/store";
@@ -33,16 +33,14 @@ export function TaskActions({ task, issue, item, onPaper, compact }: { task: Tas
   const mine = task?.claimedById === me.id;
   const author = item ? db.users[db.handoffs[item.handoffId]?.authorId ?? ""] : null;
 
-  const base = onPaper
-    ? "border border-ink/25 bg-transparent text-ink hover:bg-ink/10"
-    : "";
+  const quiet = onPaper ? ("paperOutline" as const) : ("secondary" as const);
 
   const claim = () => task && dispatchTask(claimTask, { taskId: task.id, expectedVersion: task.version }, { undoable: true, label: `Claim “${task.title}”`, toastMessage: "Claimed. It's yours." });
   const release = () => task && dispatchTask(unclaimTask, { taskId: task.id, expectedVersion: task.version }, { undoable: true, label: `Release “${task.title}”` });
   const ack = () => dispatch(acknowledge, { entityType: task ? "task" : "issue", entityId: (task?.id ?? issue?.id)! }, { undoable: true, label: "Acknowledge", toastMessage: "Acknowledged" });
 
   const primary = done ? (
-    <Button size="sm" variant={onPaper ? "secondary" : "secondary"} className={base} onClick={() => task && dispatchTask(reopenTask, { taskId: task.id, expectedVersion: task.version }, { undoable: true, label: "Reopen", toastMessage: "Reopened" })} icon={<RotateCcw size={14} />} disabled={!canAct}>
+    <Button size="sm" variant={quiet} onClick={() => task && dispatchTask(reopenTask, { taskId: task.id, expectedVersion: task.version }, { undoable: true, label: "Reopen", toastMessage: "Reopened" })} icon={<RotateCcw size={14} />} disabled={!canAct}>
       Reopen
     </Button>
   ) : task && !task.claimedById ? (
@@ -54,7 +52,7 @@ export function TaskActions({ task, issue, item, onPaper, compact }: { task: Tas
       Resolve
     </Button>
   ) : task ? (
-    <Button size="sm" className={base} onClick={claim} icon={<Hand size={14} />} disabled={!canAct}>
+    <Button size="sm" variant={quiet} onClick={claim} icon={<Hand size={14} />} disabled={!canAct}>
       Take over
     </Button>
   ) : null;
@@ -62,27 +60,27 @@ export function TaskActions({ task, issue, item, onPaper, compact }: { task: Tas
   const secondary = (
     <>
       {task && !done && !mine && task.claimedById === null && (
-        <Button size="sm" className={base} onClick={() => setResolving(true)} icon={<Check size={14} />} disabled={!canAct}>
+        <Button size="sm" variant={quiet} onClick={() => setResolving(true)} icon={<Check size={14} />} disabled={!canAct}>
           Resolve
         </Button>
       )}
       {!acked && !done && (
-        <Button size="sm" className={base} variant="secondary" onClick={ack} icon={<Eye size={14} />}>
+        <Button size="sm" variant={quiet} onClick={ack} icon={<Eye size={14} />}>
           Acknowledge
         </Button>
       )}
       {issue && canEscalate && !done && (
-        <Button size="sm" className={cx(base, onPaper && "text-paper-red")} variant="secondary" onClick={() => setEscalating(true)} icon={<Siren size={14} />}>
+        <Button size="sm" className={cx(onPaper && "text-paper-red")} variant={quiet} onClick={() => setEscalating(true)} icon={<Siren size={14} />}>
           Escalate
         </Button>
       )}
       {author && !done && (
-        <Button size="sm" className={base} variant="secondary" onClick={() => setAsking(true)} icon={<MessageCircleQuestion size={14} />}>
+        <Button size="sm" variant={quiet} onClick={() => setAsking(true)} icon={<MessageCircleQuestion size={14} />}>
           Ask {author.firstName}
         </Button>
       )}
       {mine && !done && (
-        <Button size="sm" className={base} variant="ghost" onClick={release}>
+        <Button size="sm" variant={onPaper ? "paperOutline" : "ghost"} className={cx(onPaper && "border-transparent")} onClick={release}>
           Release
         </Button>
       )}
@@ -92,7 +90,8 @@ export function TaskActions({ task, issue, item, onPaper, compact }: { task: Tas
   return (
     <div className="flex flex-wrap items-center gap-2">
       {primary}
-      {compact ? (
+      {!compact && <span className="hidden sm:contents">{secondary}</span>}
+      <span className={compact ? "contents" : "contents sm:hidden"}>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <button type="button" className={cx("grid h-8 w-8 place-items-center rounded-md", onPaper ? "border border-ink/25 text-ink" : "border border-night-500 text-steel-300")} aria-label="More actions">
@@ -125,11 +124,9 @@ export function TaskActions({ task, issue, item, onPaper, compact }: { task: Tas
             </DropdownMenu.Content>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
-      ) : (
-        secondary
-      )}
+      </span>
 
-      {task && <ResolveDialog open={resolving} onClose={() => setResolving(false)} task={task} issue={issue} />}
+      {task && resolving && <ResolveDialog onClose={() => setResolving(false)} task={task} issue={issue} />}
       {issue && <EscalateDialog open={escalating} onClose={() => setEscalating(false)} issue={issue} task={task} />}
       {author && <AskSheet open={asking} onClose={() => setAsking(false)} task={task} issue={issue} item={item} authorName={author.firstName} authorId={author.id} />}
       <span className="sr-only">{ROLE_TITLE[me.role]}</span>
@@ -145,21 +142,14 @@ function MenuItem({ children, onSelect }: { children: React.ReactNode; onSelect:
   );
 }
 
-function ResolveDialog({ open, onClose, task, issue }: { open: boolean; onClose: () => void; task: Task; issue: Issue | null }) {
+function ResolveDialog({ onClose, task, issue }: { onClose: () => void; task: Task; issue: Issue | null }) {
   const dispatchTask = useStore((s) => s.dispatchTask);
   const [note, setNote] = useState("");
   const [outcome, setOutcome] = useState<"resolved" | "monitoring" | "keep">(task.kind === "service" ? "monitoring" : "resolved");
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    if (open) {
-      setNote("");
-      setError(null);
-      setOutcome(task.kind === "service" ? "monitoring" : "resolved");
-    }
-  }, [open, task.kind]);
   return (
     <Dialog
-      open={open}
+      open
       onOpenChange={(o) => !o && onClose()}
       title="Resolve this task"
       description={task.title}

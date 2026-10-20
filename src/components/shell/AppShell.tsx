@@ -214,12 +214,13 @@ function TopBar() {
             <span className="hidden text-xs text-steel-400 md:inline">{offline ? "Offline" : syncing ? "Saving" : "Synced"}</span>
           </div>
           <Notifications />
-          <button type="button" onClick={() => openDemoDrawer("users")} className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 hover:bg-night-800" aria-label={`Signed in as ${user.name}. Switch user`}>
+          <button type="button" onClick={() => openDemoDrawer("users")} className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 hover:bg-night-800" title="Switch user">
             <Avatar user={user} size={30} />
-            <span className="hidden text-left leading-tight xl:block">
+            <span className="sr-only text-left leading-tight xl:not-sr-only xl:block">
               <span className="block text-sm font-medium text-paper-100">{user.name}</span>
               <span className="block text-xs text-steel-400">{ROLE_TITLE[user.role]}</span>
             </span>
+            <span className="sr-only">, switch user</span>
           </button>
         </div>
       </div>

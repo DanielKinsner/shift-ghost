@@ -24,6 +24,18 @@ Consequential product, design, and technical decisions for the Shift Ghost demo,
 
 **D-10 · Integrations are simulated behind a connector boundary.** Team chat, scheduling, inventory, and maintenance-ticket connectors show the exact payload they *would* send, and "Send test" writes a delivery log entry. This answers the commercial question ("can it send into our tools?") without live credentials.
 
+**D-11 · Setup belongs to the area manager; the closeout belongs to Maya.** "Start the four-minute demo" signs in as Jordan for setup, then hands over to Maya for the closeout. Running setup as a closing manager shows a permission screen, which is what a real workspace would do.
+
+**D-12 · Seeded history predates setup.** The nine nights of history represent the pilot so far. Setup re-runs on the same workspace (it is resumable and can be restarted from Demo controls or Settings) so a reviewer can configure Nightjar without wiping the evidence that makes patterns meaningful.
+
+**D-13 · The demo clock ticks.** It starts at Tuesday 10:40 PM and moves in real time, so "due in 4 min" and "doors open in 4h 15m" stay honest. Demo controls jump to 6:15 AM, 9:01 AM (the refund rule) or back, and can freeze the clock.
+
+**D-14 · Inventory tasks come from a rule, aggregated per store.** "Below par → order prep" creates one open order-prep task per store; later shortages append to it instead of creating a second task. Placing the order closes the stock threads it covered.
+
+**D-15 · Mentions keep their state.** A mention is a fault, an all-clear ("held 350 all night"), handled on shift, a transfer, or a false alarm. All-clears never rename an issue thread; a fault after a resolution reopens it and is called out as "came back" in the brief.
+
+**D-16 · The previous shift answers.** "Ask Maya" sends a real comment and notification; in demo mode a canned reply arrives a few seconds later so the loop visibly closes. Replies are written as Maya would say them, specific to the item.
+
 ## Design
 
 **D-20 · Industrial night-shift palette (from the brief).** Night `#0B1017`, surfaces `#141C27`, dirty paper `#E9E4D6`, safety orange `#FF6B1A`, reflective silver `#B7BFC8`, warning red `#FF4A3D` (on paper: `#B3261E`). All text pairs checked for WCAG AA.
@@ -47,3 +59,13 @@ Consequential product, design, and technical decisions for the Shift Ghost demo,
 **D-34 · Remotion lives in `/remotion` and shares the repo root.** One `package.json`; Remotion's `public/` is the Next `public/` folder, so `staticFile()` works in both the Remotion CLI and the in-app `@remotion/player`. Zod is pinned to the version Remotion requires (4.5.4).
 
 **D-35 · Tests.** Vitest for the extraction fixtures, rule evaluation, pattern detection and task deduplication; Playwright for the end-to-end setup → closeout → morning claim → resolution journey.
+
+**D-36 · Hydration-gated pages opt out of instant-navigation validation.** Next 16.4 with Cache Components validates that navigations render instantly. Every app page renders from on-device data after hydration (with a layout-matched skeleton before), so each page sets `export const instant = false`. A hosted data adapter would move data reads to the server and let these pages opt back in.
+
+**D-37 · Microphone first, simulated second.** `useRecorder` uses MediaRecorder and an AnalyserNode for a live waveform and playable answers. If the mic is unavailable or blocked (as in embedded previews), it falls back to a simulated waveform and says so. Words come from the seeded script unless the closer opts into the browser speech service. Either way the transcript is editable before submitting.
+
+**D-38 · The transformation is a shared-layout animation.** Each item renders as a chip inline after its evidence span, then moves into its category column via a shared `layoutId`. It plays once per closeout and is skipped entirely under `prefers-reduced-motion`.
+
+**D-39 · Tests are layered.** Unit tests cover the pure domain (extraction fixtures including the brief's exact expected extraction, rules, deduplication, patterns, briefing, conflicts, undo). Playwright covers the acceptance journey, safeguards (conflict, undo, ask-previous-shift reply, critical escalation, offline, permissions) and an axe WCAG 2.1 AA scan. State for focused tests is prepared with the same commands the app uses and injected into localStorage.
+
+**D-40 · The rendered explainer ships in `public/video`.** The 16:9 MP4 (about 9.5 MB) is committed so the page offers a download without a render step; the in-app player renders the composition live from the same props.

@@ -86,5 +86,5 @@ test("a kitchen lead can't open rules, and is told why", async ({ page }) => {
   await expect(page).toHaveURL(/\/briefing$/);
   await page.goto("/rules");
   await expect(page.getByText("Restricted area")).toBeVisible();
-  await expect(page.getByRole("heading", { name: /managed by your area manager/ })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /Only your area manager can open/ })).toBeVisible();
 });

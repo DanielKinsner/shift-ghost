@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Download } from "lucide-react";
 import { ExplainerClient } from "@/components/explainer/ExplainerClient";
 
+// Content renders from on-device data after hydration, so navigations here are not instant by design.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Explainer" };
 
 export default function ExplainerPage() {

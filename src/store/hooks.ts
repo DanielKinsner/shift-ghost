@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { demoNow, useStore } from "./store";
 import type { DemoDB, User } from "@/domain/types";
 import { detectPatterns } from "@/domain/patterns";
@@ -61,12 +61,6 @@ export function useBriefing(locationId: string) {
   const now = useNow();
   const patterns = usePatterns();
   return useMemo(() => composeBriefing(db, locationId, now, patterns), [db, locationId, now, patterns]);
-}
-
-export function useMounted(): boolean {
-  const [m, setM] = useState(false);
-  useEffect(() => setM(true), []);
-  return m;
 }
 
 export function useReducedMotionPref(): boolean {

@@ -63,6 +63,7 @@ export default function ExplainerPlayer() {
           compositionHeight={wide ? 1080 : 1920}
           controls
           clickToPlay
+          initialFrame={120}
           doubleClickToFullscreen
           style={{ width: "100%", aspectRatio: wide ? "16 / 9" : "9 / 16" }}
           acknowledgeRemotionLicense

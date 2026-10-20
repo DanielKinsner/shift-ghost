@@ -26,7 +26,7 @@ export function ConflictDialog() {
       footer={
         <>
           <Button variant="secondary" onClick={clear}>
-            Keep {by?.firstName ?? "their"}'s change
+            Keep {by?.firstName ?? "their"}&apos;s change
           </Button>
           <Button variant="primary" onClick={() => conflict?.retry()}>
             Apply mine anyway
@@ -39,7 +39,7 @@ export function ConflictDialog() {
           <Avatar user={by} size={36} />
           <div className="min-w-0">
             <p className="truncate font-medium text-paper-100">{conflict.taskTitle}</p>
-            <p className="text-sm text-steel-400">Latest version from {by?.firstName ?? "a teammate"}'s phone</p>
+            <p className="text-sm text-steel-400">Latest version from {by?.firstName ?? "a teammate"}&apos;s phone</p>
           </div>
         </div>
       )}

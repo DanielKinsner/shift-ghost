@@ -165,7 +165,7 @@ export function SetupWizard() {
     <div className="min-h-dvh pb-28">
       <header className="sticky top-0 z-30 border-b border-night-700 bg-night-900/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 sm:px-8">
-          <Link href="/" aria-label="Back to demo home">
+          <Link href="/" aria-label="Shift Ghost demo home">
             <Wordmark size="sm" />
           </Link>
           <span className="hidden text-sm text-steel-400 sm:inline">Workspace setup</span>
@@ -457,7 +457,7 @@ export function SetupWizard() {
                       </Stamp>
                     </span>
                   </div>
-                  <p className="mt-4 text-sm text-steel-400">Friday's brief, built from Luis's closeout the night before. Tomorrow's will look like this, with your questions and rules applied.</p>
+                  <p className="mt-4 text-sm text-steel-400">Friday&apos;s brief, built from Luis&apos;s closeout the night before. Tomorrow&apos;s will look like this, with your questions and rules applied.</p>
                 </div>
               </div>
             )}

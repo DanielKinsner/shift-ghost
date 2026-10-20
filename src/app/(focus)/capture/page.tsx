@@ -3,6 +3,9 @@ import { Hydrated } from "@/components/shell/Providers";
 import { Capture } from "@/components/capture/Capture";
 import { Skeleton } from "@/components/ui/primitives";
 
+// Content renders from on-device data after hydration, so navigations here are not instant by design.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Closeout" };
 
 export default function CapturePage() {

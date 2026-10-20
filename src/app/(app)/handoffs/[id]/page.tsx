@@ -3,6 +3,9 @@ import type { Metadata } from "next";
 import { HandoffReview } from "@/components/review/HandoffReview";
 import { PageSkeleton } from "@/components/ui/states";
 
+// Content renders from on-device data after hydration, so navigations here are not instant by design.
+export const instant = false;
+
 export const metadata: Metadata = { title: "Closeout review" };
 
 async function Review({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {

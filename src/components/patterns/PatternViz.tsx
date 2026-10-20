@@ -14,11 +14,13 @@ export function DayTimeGrid({ pattern, end, days = 9, onSelect, selected }: { pa
   const lastDay = dayKey(end);
   const columns = Array.from({ length: days }, (_, i) => addDays(lastDay, i - days + 1));
   const W = 640;
-  const H = 230;
-  const padL = 44;
+  const H = 250;
+  const padL = 52;
   const padB = 34;
+  const untimedY = H - padB - 6;
   const colW = (W - padL) / days;
-  const y = (min: number) => 8 + ((Math.max(TOP, Math.min(BOTTOM, min)) - TOP) / (BOTTOM - TOP)) * (H - padB - 16);
+  const y = (min: number) => 8 + ((Math.max(TOP, Math.min(BOTTOM, min)) - TOP) / (BOTTOM - TOP)) * (H - padB - 40);
+  const hasUntimed = [...pattern.mentions, ...pattern.okReports, ...pattern.falseAlarms].some((m) => !m.timed);
   const all: (PatternMention & { kind: "fault" | "ok" | "fa" })[] = [
     ...pattern.mentions.map((m) => ({ ...m, kind: "fault" as const })),
     ...pattern.okReports.map((m) => ({ ...m, kind: "ok" as const })),
@@ -45,6 +47,14 @@ export function DayTimeGrid({ pattern, end, days = 9, onSelect, selected }: { pa
       </defs>
       {/* night zone */}
       <rect x={padL} y={eightPm} width={W - padL} height={H - padB - eightPm - 8} fill="rgba(255,74,61,0.05)" />
+      {hasUntimed && (
+        <g>
+          <line x1={padL} x2={W} y1={untimedY} y2={untimedY} stroke="#273343" strokeDasharray="2 4" />
+          <text x={padL - 8} y={untimedY + 4} textAnchor="end" fontSize="9" fill="#8c97a4" fontFamily="var(--font-plex-sans)">
+            no time
+          </text>
+        </g>
+      )}
       {[12, 15, 18, 21, 24].map((h) => (
         <g key={h}>
           <line x1={padL} x2={W} y1={y(h * 60)} y2={y(h * 60)} stroke="#273343" strokeWidth="1" />
@@ -63,7 +73,7 @@ export function DayTimeGrid({ pattern, end, days = 9, onSelect, selected }: { pa
       )}
       {columns.map((d, i) => (
         <g key={d}>
-          {i > 0 && <line x1={padL + i * colW} x2={padL + i * colW} y1={8} y2={H - padB - 8} stroke="#1c2633" />}
+          {i > 0 && <line x1={padL + i * colW} x2={padL + i * colW} y1={8} y2={H - padB} stroke="#1c2633" />}
           <text x={padL + i * colW + colW / 2} y={H - padB + 12} textAnchor="middle" fontSize="10" fill="#a2acb7" fontFamily="var(--font-plex-sans)">
             {fmtShortWeekday(`${d}T12:00:00Z`)}
           </text>
@@ -77,7 +87,7 @@ export function DayTimeGrid({ pattern, end, days = 9, onSelect, selected }: { pa
         const sameDay = all.filter((x) => dayKey(x.at) === dayKey(m.at) && x.locationId !== m.locationId);
         const offset = pattern.scope === "cross-location" && sameDay.length ? (["loc-dtn", "loc-ngt", "loc-cyp"].indexOf(m.locationId) - 1) * 10 : 0;
         const cx = padL + col * colW + colW / 2 + offset;
-        const cy = m.timed ? y(minutesOfDay(m.at)) : y(22 * 60 + 40);
+        const cy = m.timed ? y(minutesOfDay(m.at)) : untimedY;
         const sel = selected === m.itemId;
         return (
           <g key={m.itemId} onClick={() => onSelect?.(m)} style={{ cursor: onSelect ? "pointer" : undefined }}>
@@ -85,7 +95,6 @@ export function DayTimeGrid({ pattern, end, days = 9, onSelect, selected }: { pa
             {m.kind === "fault" && <circle cx={cx} cy={cy} r={11} fill={pattern.severity === "critical" ? "#ff4a3d" : "#ff6b1a"} opacity=".45" filter="url(#glow)" />}
             <circle cx={cx} cy={cy} r={sel ? 9 : 7} fill={m.kind === "fault" ? `url(#${pattern.severity === "critical" ? "lampRed" : "lampOrange"})` : "#0b1017"} stroke={m.kind === "ok" ? "#39d98a" : m.kind === "fa" ? "#8c97a4" : "#05070a"} strokeWidth={m.kind === "fault" ? 2 : 2} strokeDasharray={m.kind === "fa" ? "2 2" : undefined} />
             {m.kind === "fa" && <path d={`M${cx - 4} ${cy - 4} L${cx + 4} ${cy + 4} M${cx + 4} ${cy - 4} L${cx - 4} ${cy + 4}`} stroke="#8c97a4" strokeWidth="1.5" />}
-            {!m.timed && <text x={cx} y={cy + 20} textAnchor="middle" fontSize="8" fill="#8c97a4">no time</text>}
             {sel && <circle cx={cx} cy={cy} r={13} fill="none" stroke="#e9e4d6" strokeWidth="1.5" />}
           </g>
         );

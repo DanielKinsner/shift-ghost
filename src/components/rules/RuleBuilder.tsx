@@ -359,7 +359,7 @@ function TestPanel({ draft }: { draft: Draft | null }) {
       {sample === "custom" ? (
         <Textarea aria-label="Your sample closeout" value={custom} onChange={(e) => setCustom(e.target.value)} className="mt-3 min-h-24" />
       ) : (
-        <blockquote className="mt-3 max-h-36 overflow-y-auto rounded-lg border border-night-600 bg-night-900 px-3 py-2.5 text-sm leading-relaxed text-steel-300">{text}</blockquote>
+        <blockquote tabIndex={0} aria-label="Sample closeout text" className="mt-3 max-h-36 overflow-y-auto rounded-lg border border-night-600 bg-night-900 px-3 py-2.5 text-sm leading-relaxed text-steel-300">{text}</blockquote>
       )}
       {result && (
         <ul className="mt-4 flex flex-col gap-2">

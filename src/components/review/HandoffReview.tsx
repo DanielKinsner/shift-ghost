@@ -210,7 +210,7 @@ export function HandoffReview({ handoffId, fresh }: { handoffId: string; fresh: 
               <h2 className="font-display text-lg font-semibold tracking-wide">Original transcript</h2>
               <span className="text-xs text-steel-500">Highlights are evidence. Dotted means unmapped.</span>
             </div>
-            <div ref={transcriptRef} className="relative overflow-y-auto px-4 py-4">
+            <div ref={transcriptRef} tabIndex={0} aria-label="Original transcript text" className="relative overflow-y-auto px-4 py-4">
               {stage === "processing" && !handoff.error && <ScanLine />}
                 <Transcript
                   db={db}
@@ -372,7 +372,12 @@ export function HandoffReview({ handoffId, fresh }: { handoffId: string; fresh: 
               ) : (
                 <>
                   <StatusLight tone="ok" size={9} className="mr-2 align-middle" />
-                  Ready. Luis Ortega and Bri Ellis get this at 6:00 AM.
+                  Ready.{" "}
+                  {Object.values(db.users)
+                    .filter((u) => u.appUser && u.locationIds.includes(handoff.locationId) && (u.role === "opening_manager" || u.role === "kitchen_lead"))
+                    .map((u) => u.name)
+                    .join(" and ") || "The opening crew"}{" "}
+                  get this at {fmtTime(`2026-01-01T${Object.values(db.shiftTemplates).find((t) => t.locationId === handoff.locationId && t.kind === "open")?.handoffAt ?? "06:00"}:00Z`)}.
                 </>
               )}
             </p>
@@ -418,9 +423,9 @@ export function HandoffReview({ handoffId, fresh }: { handoffId: string; fresh: 
         </ul>
       </Dialog>
 
-      <CorrectDialog item={correcting} onClose={() => setCorrecting(null)} />
-      <DismissDialog item={dismissing} onClose={() => setDismissing(null)} />
-      <CreateFromSpanDialog handoffId={handoffId} index={creating} onClose={() => setCreating(null)} />
+      {correcting && <CorrectDialog key={correcting.id} item={correcting} onClose={() => setCorrecting(null)} />}
+      {dismissing && <DismissDialog key={dismissing.id} item={dismissing} onClose={() => setDismissing(null)} />}
+      {creating !== null && <CreateFromSpanDialog key={creating} handoffId={handoffId} index={creating} onClose={() => setCreating(null)} />}
 
       <Dialog
         open={confirmDelete}
@@ -511,18 +516,11 @@ function PublishedBanner({ handoffId, now }: { handoffId: string; now: string })
   );
 }
 
-function CorrectDialog({ item, onClose }: { item: ExtractedItem | null; onClose: () => void }) {
+function CorrectDialog({ item, onClose }: { item: ExtractedItem; onClose: () => void }) {
   const db = useDb();
   const dispatch = useStore((s) => s.dispatch);
-  const [form, setForm] = useState({ title: "", severity: "normal" as Severity, qty: "" as string, ownerId: "", note: "" });
+  const [form, setForm] = useState({ title: item.title, severity: item.severity as Severity, qty: item.fields.qty != null ? String(item.fields.qty) : "", ownerId: item.proposedTask?.ownerId ?? "", note: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  useEffect(() => {
-    if (item) {
-      setForm({ title: item.title, severity: item.severity, qty: item.fields.qty != null ? String(item.fields.qty) : "", ownerId: item.proposedTask?.ownerId ?? "", note: "" });
-      setErrors({});
-    }
-  }, [item]);
-  if (!item) return null;
   const people = Object.values(db.users).filter((u) => u.appUser && u.locationIds.includes(item.locationId));
   const save = () => {
     const r = CorrectionSchema.safeParse({ title: form.title, severity: form.severity, qty: form.qty, note: form.note });
@@ -596,15 +594,10 @@ function CorrectDialog({ item, onClose }: { item: ExtractedItem | null; onClose:
   );
 }
 
-function DismissDialog({ item, onClose }: { item: ExtractedItem | null; onClose: () => void }) {
+function DismissDialog({ item, onClose }: { item: ExtractedItem; onClose: () => void }) {
   const dispatch = useStore((s) => s.dispatch);
   const [reason, setReason] = useState("");
   const [error, setError] = useState<string | null>(null);
-  useEffect(() => {
-    setReason("");
-    setError(null);
-  }, [item]);
-  if (!item) return null;
   return (
     <Dialog
       open
@@ -635,15 +628,11 @@ function DismissDialog({ item, onClose }: { item: ExtractedItem | null; onClose:
   );
 }
 
-function CreateFromSpanDialog({ handoffId, index, onClose }: { handoffId: string; index: number | null; onClose: () => void }) {
+function CreateFromSpanDialog({ handoffId, index, onClose }: { handoffId: string; index: number; onClose: () => void }) {
   const db = useDb();
   const dispatch = useStore((s) => s.dispatch);
   const [kind, setKind] = useState<ItemKind>("task");
-  const [title, setTitle] = useState("");
-  useEffect(() => {
-    if (index !== null) setTitle(db.handoffs[handoffId].unmapped[index]?.text.replace(/\.$/, "") ?? "");
-  }, [index]); // eslint-disable-line react-hooks/exhaustive-deps
-  if (index === null) return null;
+  const [title, setTitle] = useState(() => db.handoffs[handoffId].unmapped[index]?.text.replace(/\.$/, "") ?? "");
   const span = db.handoffs[handoffId].unmapped[index];
   if (!span) return null;
   return (

@@ -72,7 +72,7 @@ export const MorningClaims: React.FC<{ duration: number; tasks: ExplainerProps["
               <div style={{ fontFamily: F.mono, fontSize: 20 * u, color: "#5b5a52" }}>DUE {t.due.toUpperCase()}</div>
               <div style={{ height: 2 * u, borderTop: `${2 * u}px dashed #9a978b`, margin: `${14 * u}px 0` }} />
               <div style={{ fontFamily: F.display, fontWeight: 700, fontSize: (vertical ? 52 : 46) * u, lineHeight: 1.02 }}>{t.title}</div>
-              <div style={{ fontFamily: F.body, fontSize: 22 * u, color: "#4a4943", marginTop: 14 * u }}>From {i === 0 ? "the customer answer" : i === 1 ? "the equipment answer" : "the stock answer"} in last night's closeout.</div>
+              <div style={{ fontFamily: F.body, fontSize: 22 * u, color: "#4a4943", marginTop: 14 * u }}>From {i === 0 ? "the customer answer" : i === 1 ? "the equipment answer" : "the stock answer"} in last night&apos;s closeout.</div>
               <div style={{ position: "absolute", right: 26 * u, bottom: 30 * u }}>
                 <Stamp text={`Claimed · ${first}`} sub={t.claimedAt} at={CLAIM_AT[i]} u={u} rotate={-8 + i * 3} />
               </div>
