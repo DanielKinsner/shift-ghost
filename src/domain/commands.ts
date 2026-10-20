@@ -1159,6 +1159,11 @@ export const setDemo: Command<Partial<Pick<DemoDB["demo"], "currentUserId" | "cu
   return { touched: [] };
 };
 
+export const markTransformSeen: Command<{ handoffId: ID }> = (db, { handoffId }) => {
+  if (!db.demo.seenTransform.includes(handoffId)) db.demo.seenTransform.push(handoffId);
+  return { touched: [] };
+};
+
 export const setClock: Command<{ iso: ISO; nowMs: number }> = (db, { iso, nowMs }) => {
   db.demo.clockAnchor = iso;
   db.demo.clockSetAtMs = nowMs;
