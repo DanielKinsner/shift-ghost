@@ -1,6 +1,7 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from "react";
+import Link, { type LinkProps } from "next/link";
+import { forwardRef, type AnchorHTMLAttributes, type ButtonHTMLAttributes, type CSSProperties, type ReactNode } from "react";
 import clsx from "clsx";
 import type { Confidence, Severity, User } from "@/domain/types";
 
@@ -31,6 +32,15 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
 }
 
+export function buttonClassName({ variant = "secondary", size = "md", className }: { variant?: ButtonVariant; size?: ButtonSize; className?: string } = {}) {
+  return cx(
+    "inline-flex select-none items-center justify-center whitespace-nowrap transition-[transform,color,background-color,border-color,box-shadow] duration-150 motion-safe:hover:-translate-y-px motion-safe:active:translate-y-0 disabled:pointer-events-none disabled:opacity-45",
+    VARIANT[variant],
+    SIZE[size],
+    className,
+  );
+}
+
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   { variant = "secondary", size = "md", icon, className, children, type = "button", ...rest },
   ref,
@@ -39,17 +49,31 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     <button
       ref={ref}
       type={type}
-      className={cx(
-        "inline-flex select-none items-center justify-center whitespace-nowrap transition-colors duration-150 disabled:cursor-not-allowed disabled:opacity-45",
-        VARIANT[variant],
-        SIZE[size],
-        className,
-      )}
+      className={buttonClassName({ variant, size, className })}
       {...rest}
     >
       {icon}
       {children}
     </button>
+  );
+});
+
+type ButtonLinkProps = LinkProps &
+  Omit<AnchorHTMLAttributes<HTMLAnchorElement>, keyof LinkProps> & {
+    variant?: ButtonVariant;
+    size?: ButtonSize;
+    icon?: ReactNode;
+  };
+
+export const ButtonLink = forwardRef<HTMLAnchorElement, ButtonLinkProps>(function ButtonLink(
+  { variant = "secondary", size = "md", icon, className, children, ...rest },
+  ref,
+) {
+  return (
+    <Link ref={ref} className={buttonClassName({ variant, size, className })} {...rest}>
+      {icon}
+      {children}
+    </Link>
   );
 });
 

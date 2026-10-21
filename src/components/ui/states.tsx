@@ -1,9 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import type { ReactNode } from "react";
 import { Lock, TriangleAlert, WifiOff } from "lucide-react";
-import { Button, Skeleton, StatusLight, cx } from "./primitives";
+import { Button, ButtonLink, Skeleton, StatusLight, cx } from "./primitives";
 import { whoCanGrant, type Permission } from "@/domain/permissions";
 
 export function EmptyState({ title, body, action, icon, className }: { title: string; body: ReactNode; action?: ReactNode; icon?: ReactNode; className?: string }) {
@@ -33,9 +32,7 @@ export function PermissionDenied({ permission, what, role }: { permission: Permi
             You&apos;re signed in as a {role.toLowerCase()}. You can still see your opening brief and act on your tasks. Ask {whoCanGrant(permission)} if you need access here.
           </p>
           <div className="mt-2 flex flex-wrap gap-2">
-            <Link href="/briefing">
-              <Button variant="primary">Go to the opening brief</Button>
-            </Link>
+            <ButtonLink href="/briefing" variant="primary">Go to the opening brief</ButtonLink>
           </div>
         </div>
       </div>

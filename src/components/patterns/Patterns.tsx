@@ -9,7 +9,7 @@ import { createTask, fileTicket, markGuide } from "@/domain/commands";
 import type { Pattern, PatternMention } from "@/domain/patterns";
 import { can, ROLE_TITLE } from "@/domain/permissions";
 import { addDays, at, dayKey, fmtDateTime, fmtShortWeekday, fmtTime } from "@/domain/time";
-import { Avatar, Button, Mono, SectionHeading, StatusLight, Tape, cx } from "@/components/ui/primitives";
+import { Avatar, Button, ButtonLink, Mono, SectionHeading, StatusLight, Tape, cx } from "@/components/ui/primitives";
 import { Segmented } from "@/components/ui/form";
 import { EmptyState, PermissionDenied } from "@/components/ui/states";
 import { DayTimeGrid, StoreMatrix } from "./PatternViz";
@@ -228,11 +228,9 @@ function PatternCard({ pattern: p, now }: { pattern: Pattern; now: string }) {
                     Send to {maint.name.toLowerCase()}
                   </Button>
                 ) : (
-                  <Link href="/settings#integrations">
-                    <Button size="sm" icon={<Ticket size={14} />}>
-                      Connect maintenance tickets
-                    </Button>
-                  </Link>
+                  <ButtonLink href="/settings#integrations" size="sm" icon={<Ticket size={14} />}>
+                    Connect maintenance tickets
+                  </ButtonLink>
                 ))}
               <Button size="sm" variant="ghost" icon={<ClipboardCopy size={14} />} onClick={copyTrail}>
                 Copy evidence trail

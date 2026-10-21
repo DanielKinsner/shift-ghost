@@ -12,7 +12,7 @@ import type { DemoDB, Severity } from "@/domain/types";
 import { can, ROLE_TITLE } from "@/domain/permissions";
 import { diffMinutes, fmtDay, fmtDuration, fmtRelative, fmtTime, toMs, addMinutes } from "@/domain/time";
 import { MORNING_ANCHOR } from "@/data/seed";
-import { Avatar, Button, Mono, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
+import { Avatar, Button, ButtonLink, Mono, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
 import { TimeRail, type RailMarker } from "@/components/ui/TimeRail";
 import { EmptyState, PermissionDenied } from "@/components/ui/states";
 import { TaskActions } from "./TaskActions";
@@ -418,9 +418,7 @@ function Awaiting({ view }: { view: BriefingView }) {
         action={
           <>
             {pending ? (
-              <Link href={`/handoffs/${pending.id}`}>
-                <Button variant="primary">Open the closeout</Button>
-              </Link>
+              <ButtonLink href={`/handoffs/${pending.id}`} variant="primary">Open the closeout</ButtonLink>
             ) : (
               <>
                 {closer && closer.id !== me.id && (
@@ -435,17 +433,11 @@ function Awaiting({ view }: { view: BriefingView }) {
                   </Button>
                 )}
                 {closer?.id === me.id && (
-                  <Link href="/capture">
-                    <Button variant="primary">Record tonight&apos;s closeout</Button>
-                  </Link>
+                  <ButtonLink href="/capture" variant="primary">Record tonight&apos;s closeout</ButtonLink>
                 )}
               </>
             )}
-            <Link href="/handoffs">
-              <Button>
-                <RotateCcw size={15} /> Past handoffs
-              </Button>
-            </Link>
+            <ButtonLink href="/handoffs" icon={<RotateCcw size={15} />}>Past handoffs</ButtonLink>
           </>
         }
       />

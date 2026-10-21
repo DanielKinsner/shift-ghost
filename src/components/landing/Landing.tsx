@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { CirclePlay, ArrowRight } from "lucide-react";
+import { CirclePlay, ArrowRight, Code2, ExternalLink } from "lucide-react";
 import { useStore } from "@/store/store";
 import { useNow } from "@/store/hooks";
 import { Wordmark } from "@/components/ui/brand";
-import { Avatar, Button, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
+import { Avatar, Button, ButtonLink, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
 import { ShiftLine } from "@/components/ui/ShiftLine";
 import { setDemo } from "@/domain/commands";
 import { guideProgress } from "@/domain/guide";
@@ -76,11 +76,12 @@ export function Landing() {
               <Button variant="primary" size="lg" onClick={start} disabled={!db} icon={<ArrowRight size={18} />} className="flex-row-reverse">
                 Start the four-minute demo
               </Button>
-              <Link href="/explainer">
-                <Button size="lg" icon={<CirclePlay size={18} />}>
-                  Watch the 45-second explainer
-                </Button>
-              </Link>
+              <ButtonLink href="/explainer" size="lg" icon={<CirclePlay size={18} />}>
+                Watch the 45-second explainer
+              </ButtonLink>
+            </div>
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[0.72rem] uppercase tracking-wider text-steel-500" aria-label="Demo details">
+              <span>No signup</span><span aria-hidden>·</span><span>About four minutes</span><span aria-hidden>·</span><span>Resettable</span>
             </div>
             <p className="text-sm text-steel-500">Nightjar Kitchens is a fictional three-store restaurant group. All data is seeded and stays in this browser.</p>
           </div>
@@ -147,6 +148,21 @@ export function Landing() {
             <p className="text-steel-400">Speech-to-text (the mic waveform is live; the words come from the seeded script), text and team-chat delivery, scheduling, inventory and maintenance connectors.</p>
           </div>
         </section>
+
+        <footer className="mt-16 flex flex-col gap-5 border-t border-night-700 py-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <p className="font-display text-lg font-semibold tracking-wide text-paper-100">Built as an interactive product case study.</p>
+            <p className="mt-1 text-sm text-steel-400">Product strategy, interaction design and engineering by Daniel Kinsner.</p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <a href="https://danielkinsner.com" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm font-semibold text-safety transition-colors hover:bg-night-800 hover:text-[#ff7d35]">
+              DanielKinsner.com <ExternalLink size={14} />
+            </a>
+            <a href="https://github.com/DanielKinsner/shift-ghost" target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 rounded-md px-3 py-2 text-sm text-steel-300 transition-colors hover:bg-night-800 hover:text-paper-100">
+              <Code2 size={15} /> View source
+            </a>
+          </div>
+        </footer>
       </main>
     </div>
   );

@@ -9,8 +9,8 @@ const sans = IBM_Plex_Sans({ variable: "--font-plex-sans", subsets: ["latin"], w
 const mono = IBM_Plex_Mono({ variable: "--font-plex-mono", subsets: ["latin"], weight: ["400", "500"] });
 
 export const metadata: Metadata = {
-  title: { default: "Shift Ghost", template: "%s · Shift Ghost" },
-  description: "A voice-first shift handoff: a two-minute spoken closeout becomes tomorrow's prioritized opening brief, with evidence for every item.",
+  title: { default: "Shift Ghost — Voice-to-Shift Handoff", template: "%s · Shift Ghost" },
+  description: "A tired closer talks for two minutes. Shift Ghost turns it into tomorrow's prioritized opening brief, with evidence for every item.",
   applicationName: "Shift Ghost",
 };
 

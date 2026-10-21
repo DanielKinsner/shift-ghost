@@ -15,6 +15,7 @@ Running checklist for the Shift Ghost demo. `[x]` = built and verified in the ru
 - [x] M8 · Stores & shift templates, team & notifications, settings (retention, delete recording, integrations), audit trail, handoffs list
 - [x] M9 · Remotion explainer (16:9 + 9:16, sound placeholders) + in-app player + rendered MP4s
 - [x] M10 · E2E tests, accessibility scan, responsive QA, README, SALES_HANDOFF
+- [x] M11 · Portfolio polish: share metadata + OG card, installable manifest, attribution, semantic link buttons, responsive deadline rail, clean-clone verification
 
 ## Acceptance story (verified by `e2e/journey.spec.ts`, about 6 s of browser time)
 
@@ -55,10 +56,11 @@ Running checklist for the Shift Ghost demo. `[x]` = built and verified in the ru
 ## Verification (last run)
 
 - `npm test`: 50 unit tests pass
-- `npx playwright test`: 14 pass (journey, offline, permissions, conflict, undo, ask-previous-shift, critical escalation, axe on 7 screens)
+- `npx playwright test`: 15 pass (journey, offline, permissions, conflict, undo, ask-previous-shift, critical escalation, share metadata/OG image, narrow-viewport containment, axe on 7 screens)
 - `npm run lint`: 0 problems · `npm run typecheck`: clean · `npm run build`: succeeds
 - Screenshot sweep at 390 / 768 / 1440 / 2560 px reviewed; no horizontal scroll at 390 px
 - Remotion: both compositions rendered to MP4 (45 s, 30 fps)
+- Fresh-clone install verified: the repaired lockfile now passes `npm ci`; `npm run typecheck` generates Next route helpers before invoking TypeScript.
 
 ## Deployment
 

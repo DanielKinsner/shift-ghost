@@ -7,7 +7,7 @@ import { useCurrentUser, useDb } from "@/store/hooks";
 import { itemNeedsReview } from "@/domain/commands";
 import { can } from "@/domain/permissions";
 import { fmtDay, fmtElapsed, fmtTime } from "@/domain/time";
-import { Avatar, Button, Mono, StatusLight } from "@/components/ui/primitives";
+import { Avatar, ButtonLink, Mono, StatusLight } from "@/components/ui/primitives";
 import { Segmented } from "@/components/ui/form";
 import { EmptyState } from "@/components/ui/states";
 
@@ -32,11 +32,9 @@ export function Handoffs() {
             <Segmented label="Store" value={store} onChange={setStore} options={[{ value: "all", label: "All" }, ...Object.values(db.locations).map((l) => ({ value: l.id, label: l.name }))]} size="sm" />
           )}
           {can(me, "capture") && (
-            <Link href="/capture">
-              <Button variant="primary" icon={<Mic size={15} />}>
-                New closeout
-              </Button>
-            </Link>
+            <ButtonLink href="/capture" variant="primary" icon={<Mic size={15} />}>
+              New closeout
+            </ButtonLink>
           )}
         </div>
       </div>

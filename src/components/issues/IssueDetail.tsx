@@ -10,7 +10,7 @@ import { patternForIssue } from "@/domain/patterns";
 import { can } from "@/domain/permissions";
 import { addDays, dayKey, fmtDateTime, fmtDay, fmtRelative, fmtTime, toMs } from "@/domain/time";
 import type { ExtractedItem, IssueStatus } from "@/domain/types";
-import { Avatar, Button, ConfidenceTag, Mono, SectionHeading, SeverityTag, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
+import { Avatar, Button, ButtonLink, ConfidenceTag, Mono, SectionHeading, SeverityTag, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
 import { Field, Textarea, Input } from "@/components/ui/form";
 import { Dialog } from "@/components/ui/overlay";
 import { EmptyState } from "@/components/ui/states";
@@ -36,7 +36,7 @@ export function IssueDetail({ issueId }: { issueId: string }) {
   const issue = db.issues[issueId];
 
   if (!issue) {
-    return <EmptyState title="That issue isn't here" body="It may have been removed when the demo was reset." action={<Link href="/patterns"><Button>Back to patterns</Button></Link>} />;
+    return <EmptyState title="That issue isn't here" body="It may have been removed when the demo was reset." action={<ButtonLink href="/patterns">Back to patterns</ButtonLink>} />;
   }
 
   const location = db.locations[issue.locationId];

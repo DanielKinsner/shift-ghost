@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, LayoutGroup, motion } from "motion/react";
@@ -27,7 +26,7 @@ import { CorrectionSchema, DismissSchema, fieldErrors } from "@/domain/schemas";
 import { fmtDateTime, fmtElapsed, fmtTime } from "@/domain/time";
 import type { ExtractedItem, ItemKind, Severity } from "@/domain/types";
 import { MORNING_ANCHOR } from "@/data/seed";
-import { Avatar, Button, Mono, SectionHeading, Skeleton, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
+import { Avatar, Button, ButtonLink, Mono, SectionHeading, Skeleton, Stamp, StatusLight, Tape, cx } from "@/components/ui/primitives";
 import { Field, Input, Select, Textarea } from "@/components/ui/form";
 import { Dialog } from "@/components/ui/overlay";
 import { EmptyState, ErrorState } from "@/components/ui/states";
@@ -115,7 +114,7 @@ export function HandoffReview({ handoffId, fresh }: { handoffId: string; fresh: 
   }, []);
 
   if (!handoff) {
-    return <EmptyState title="That closeout isn't here" body="It may have been removed when the demo was reset." action={<Link href="/handoffs"><Button>See all handoffs</Button></Link>} />;
+    return <EmptyState title="That closeout isn't here" body="It may have been removed when the demo was reset." action={<ButtonLink href="/handoffs">See all handoffs</ButtonLink>} />;
   }
 
   const location = db.locations[handoff.locationId];

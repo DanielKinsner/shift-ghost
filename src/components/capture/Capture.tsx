@@ -13,7 +13,7 @@ import { PRIMARY_ANSWERS } from "@/data/transcripts";
 import { tonightsHandoff } from "@/domain/guide";
 import { fmtDay, fmtElapsed, fmtTime, fmtRelative, at, dayKey, addDays } from "@/domain/time";
 import { GhostMark } from "@/components/ui/brand";
-import { Button, Mono, Stamp, StatusLight, cx } from "@/components/ui/primitives";
+import { Button, ButtonLink, Mono, Stamp, StatusLight, cx } from "@/components/ui/primitives";
 import { Textarea, Switch } from "@/components/ui/form";
 import { Dialog } from "@/components/ui/overlay";
 import { Waveform } from "@/components/ui/Waveform";
@@ -402,9 +402,7 @@ export function Capture() {
                 <Mono className="ml-auto text-xs text-steel-500">{queuedId}</Mono>
               </div>
               <p className="mt-6 text-sm text-steel-400">Turn offline mode off in Demo controls to watch it sync.</p>
-              <Link href="/handoffs" className="mt-4">
-                <Button>See all handoffs</Button>
-              </Link>
+              <ButtonLink href="/handoffs" className="mt-4">See all handoffs</ButtonLink>
             </motion.section>
           )}
         </AnimatePresence>

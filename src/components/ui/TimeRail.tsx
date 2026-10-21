@@ -60,7 +60,9 @@ export function TimeRail({
   const placed = sorted.map((m) => {
     const p = pct(m.at);
     let lane = 0;
-    while (lanes[lane] !== undefined && p - lanes[lane] < (dense ? 11 : 14)) lane++;
+    // Dense briefing labels are surprisingly wide relative to a six-hour rail.
+    // Give them enough room to remain readable instead of technically non-overlapping.
+    while (lanes[lane] !== undefined && p - lanes[lane] < (dense ? 18 : 14)) lane++;
     lanes[lane] = p;
     return { ...m, p, lane };
   });
@@ -87,7 +89,7 @@ export function TimeRail({
               ) : (
                 <StatusLight tone={m.tone} off={m.done} size={11} />
               )}
-              <span className={cx("max-w-[11rem] truncate text-xs", dense && "hidden sm:inline", m.done ? "text-steel-500 line-through" : "text-steel-100")}>{m.label}</span>
+              <span className={cx("max-w-[11rem] truncate text-xs", dense && "hidden lg:inline", m.done ? "text-steel-500 line-through" : "text-steel-100")}>{m.label}</span>
             </div>
           </div>
         ))}

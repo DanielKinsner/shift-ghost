@@ -4,6 +4,8 @@
 
 **Live demo: https://shift-ghost.vercel.app** (press *Start the four-minute demo*; everything runs in your browser, and *Demo controls → Reset all demo data* starts over).
 
+An interactive product case study by **[Daniel Kinsner](https://danielkinsner.com)**. The deployed experience includes a guided walkthrough, a 45-second Remotion explainer, seeded operational history, and links back to this source repository.
+
 Demo company: **Nightjar Kitchens**, a fictional three-store fast-casual group (Downtown, Northgate, Canyon Plaza). All data is seeded and runs in the browser. No accounts, no paid APIs, no external services.
 
 ![Opening brief](docs/screenshots/briefing-desktop.png)
@@ -133,3 +135,5 @@ Screens worth capturing for a portfolio: the capture question on a phone, the re
 - Motion respects `prefers-reduced-motion` (the transformation is skipped and pulses stop).
 - Skeletons match final layout while local data loads, so nothing jumps.
 - No secrets: the repo has no keys, tokens or environment files.
+- Share-ready: canonical metadata, structured product data, a generated 1200×630 social card, web manifest, robots file and sitemap are verified by Playwright.
+- Reproducible from a clean clone: `npm ci`, route-aware type generation, lint, unit tests, production build and Playwright all run without relying on a warm development tree.

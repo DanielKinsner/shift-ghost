@@ -1,5 +1,21 @@
 import { expect, test } from "@playwright/test";
-import { morningState, primeState } from "./state";
+import { freshState, morningState, primeState } from "./state";
+
+test("the landing page is share-ready and stays inside narrow viewports", async ({ page, request }) => {
+  await primeState(page, freshState());
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  await expect(page).toHaveTitle("Shift Ghost — Voice-to-Shift Handoff Demo");
+  await expect(page.locator('meta[property="og:title"]')).toHaveAttribute("content", "Shift Ghost — Voice-to-Shift Handoff");
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+
+  const card = await request.get("/api/og");
+  expect(card.ok()).toBe(true);
+  expect(card.headers()["content-type"]).toContain("image/png");
+  expect((await card.body()).byteLength).toBeGreaterThan(10_000);
+});
 
 test("two managers editing the same task get a conflict, not a silent overwrite", async ({ page }) => {
   const db = morningState();
